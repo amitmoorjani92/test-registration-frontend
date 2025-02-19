@@ -29,11 +29,15 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import CustomerRegistration from './pages/CustomerRegistration';
 import AdminRegistration from './pages/AdminRegistration';
 import AdminLogin from './pages/AdminLogin';
+import VerifyEmail from './pages/VerifyEmail';
+import HomePage from './pages/HomePage';
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path='/' element={< HomePage/>}/>
+        <Route path="/verify/:token" element={<VerifyEmail/>}/>
         <Route path="/customer-register" element={<CustomerRegistration />} />
         <Route path="/admin-register" element={<AdminRegistration />} />
         <Route path="/admin-login" element={<AdminLogin />} />

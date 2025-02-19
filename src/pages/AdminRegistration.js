@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const AdminRegistration = () => {
   const [formData, setFormData] = useState({
@@ -13,14 +14,17 @@ const AdminRegistration = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/register', {
+      const res = await axios.post('http://localhost:5000/signup', {
         ...formData,
         role: 'admin'
       });
       alert(res.data.message);
+      navigate('/');
     } catch (error) {
       alert(error.response.data.message);
     }

@@ -1,34 +1,56 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const AdminLogin = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
+const Login = () => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        setError(""); // Clear previous errors
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', formData);
-      alert('Login successful');
-      // Redirect or store token
-    } catch (error) {
-      alert(error.response.data.message);
-    }
-  };
+        try {
+            const response = await axios.post("http://localhost:5000/login", {
+                email,
+                password
+            });
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
-      <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
-      <button type="submit">Login</button>
-    </form>
-  );
+            if (response.status === 200) {
+                const user = response.data.user;
+                localStorage.setItem("user", JSON.stringify(user)); // Store user details
+                alert("Login successful!");
+            }
+        } catch (err) {
+            setError(err.response?.data?.message || "Login failed.");
+        }
+    };
+
+    return (
+        <div className="login-container">
+            <h2>Login</h2>
+            {error && <p className="error">{error}</p>}
+            <form onSubmit={handleLogin}>
+                <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    );
 };
 
-export default AdminLogin;
+export default Login;
